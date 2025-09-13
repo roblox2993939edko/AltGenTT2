@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltGen - Генератор аккаунтов</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4cb5ae;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .generator-section, .preview-section {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--primary-color);
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .account-card {
+            background-color: var(--background-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .premium {
+            border-left-color: gold;
+        }
+
+        .account-card h3 {
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .premium-badge {
+            background-color: gold;
+            color: #333;
+        }
+
+        .account-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .account-info div {
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions button {
+            flex: 1;
+        }
+
+        .download-btn {
+            background-color: var(--accent-color);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background-color: var(--card-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AltGen</h1>
+            <p class="tagline">Мощный генератор случайных аккаунтов</p>
+        </header>
+
+        <div class="main-content">
+            <section class="generator-section">
+                <h2>Генератор аккаунтов</h2>
+                <form id="generator-form">
+                    <div class="form-group">
+                        <label for="account-type">Тип аккаунта:</label>
+                        <select id="account-type">
+                            <option value="standard">Стандартный</option>
+                            <option value="premium">Премиум</option>
+                            <option value="random">Случайный (50% премиум)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="account-count">Количество аккаунтов:</label>
+                        <input type="number" id="account-count" min="1" max="100" value="5">
+                    </div>
+                    <button type="submit">Сгенерировать аккаунты</button>
+                </form>
+
+                <div class="results" id="results">
+                    <!-- Сгенерированные аккаунты появятся здесь -->
+                </div>
+            </section>
+
+            <section class="preview-section">
+                <h2>Предпросмотр</h2>
+                <div id="preview">
+                    <p>Сгенерированные аккаунты появятся здесь</p>
+                </div>
+                
+                <div class="actions">
+                    <button id="save-premium" class="download-btn">Сохранить премиум</button>
+                    <button id="save-standard" class="download-btn">Сохранить стандартные</button>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-count">0</div>
+                        <div>Всего аккаунтов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="premium-count">0</div>
+                        <div>Премиум аккаунтов</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="standard-count">0</div>
+                        <div>Стандартных аккаунтов</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>AltGen &copy; 2023. Генератор случайных аккаунтов.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generatorForm = document.getElementById('generator-form');
+            const resultsContainer = document.getElementById('results');
+            const previewContainer = document.getElementById('preview');
+            const savePremiumBtn = document.getElementById('save-premium');
+            const saveStandardBtn = document.getElementById('save-standard');
+            const totalCountEl = document.getElementById('total-count');
+            const premiumCountEl = document.getElementById('premium-count');
+            const standardCountEl = document.getElementById('standard-count');
+            
+            let generatedAccounts = [];
+            let premiumAccounts = [];
+            let standardAccounts = [];
+            
+            // Функция для генерации случайной строки
+            function generateRandomString(length) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let result = '';
+                for (let i = 0; i < length; i++) {
+                    result += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                return result;
+            }
+            
+            // Функция для генерации аккаунта
+            function generateAccount(isPremium = false) {
+                const username = generateRandomString(8);
+                const password = generateRandomString(12);
+                const email = `${generateRandomString(10)}@gmail.com`;
+                
+                return {
+                    username,
+                    password,
+                    email,
+                    premium: isPremium
+                };
+            }
+            
+            // Функция для обновления статистики
+            function updateStats() {
+                totalCountEl.textContent = generatedAccounts.length;
+                premiumCountEl.textContent = premiumAccounts.length;
+                standardCountEl.textContent = standardAccounts.length;
+            }
+            
+            // Функция для отображения аккаунтов
+            function displayAccounts(accounts) {
+                resultsContainer.innerHTML = '';
+                previewContainer.innerHTML = '';
+                
+                if (accounts.length === 0) {
+                    previewContainer.innerHTML = '<p>Нет сгенерированных аккаунтов</p>';
+                    return;
+                }
+                
+                accounts.forEach(account => {
+                    // Создаем карточку аккаунта
+                    const accountCard = document.createElement('div');
+                    accountCard.className = `account-card ${account.premium ? 'premium' : ''}`;
+                    
+                    accountCard.innerHTML = `
+                        <h3>
+                            ${account.username}
+                            ${account.premium ? '<span class="badge premium-badge">Премиум</span>' : '<span class="badge">Стандарт</span>'}
+                        </h3>
+                        <div class="account-info">
+                            <div><strong>Email:</strong> ${account.email}</div>
+                            <div><strong>Пароль:</strong> ${account.password}</div>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(accountCard);
+                    
+                    // Добавляем в предпросмотр
+                    const previewItem = document.createElement('div');
+                    previewItem.textContent = `${account.username}:${account.password}:${account.email}:${account.premium ? 'да' : 'нет'}`;
+                    previewItem.style.marginBottom = '5px';
+                    previewItem.style.padding = '5px';
+                    previewItem.style.backgroundColor = '#f5f5f5';
+                    previewItem.style.borderRadius = '4px';
+                    
+                    previewContainer.appendChild(previewItem);
+                });
+            }
+            
+            // Обработчик отправки формы
+            generatorForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const accountType = document.getElementById('account-type').value;
+                const accountCount = parseInt(document.getElementById('account-count').value);
+                
+                generatedAccounts = [];
+                premiumAccounts = [];
+                standardAccounts = [];
+                
+                for (let i = 0; i < accountCount; i++) {
+                    let isPremium = false;
+                    
+                    if (accountType === 'premium') {
+                        isPremium = true;
+                    } else if (accountType === 'random') {
+                        isPremium = Math.random() > 0.5;
+                    }
+                    
+                    const account = generateAccount(isPremium);
+                    generatedAccounts.push(account);
+                    
+                    if (isPremium) {
+                        premiumAccounts.push(account);
+                    } else {
+                        standardAccounts.push(account);
+                    }
+                }
+                
+                displayAccounts(generatedAccounts);
+                updateStats();
+            });
+            
+            // Функция для сохранения аккаунтов в файл
+            function saveAccountsToFile(accounts, filename) {
+                if (accounts.length === 0) {
+                    alert('Нет аккаунтов для сохранения!');
+                    return;
+                }
+                
+                let content = '';
+                accounts.forEach(account => {
+                    content += `${account.username}:${account.password}:${account.email}:${account.premium ? 'да' : 'нет'}\n`;
+                });
+                
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                
+                a.href = url;
+                a.download = filename;
+                a.click();
+                
+                URL.revokeObjectURL(url);
+            }
+            
+            // Обработчики кнопок сохранения
+            savePremiumBtn.addEventListener('click', function() {
+                saveAccountsToFile(premiumAccounts, 'premium_accounts.txt');
+            });
+            
+            saveStandardBtn.addEventListener('click', function() {
+                saveAccountsToFile(standardAccounts, 'standard_accounts.txt');
+            });
+        });
+    </script>
+</body>
+</html>
